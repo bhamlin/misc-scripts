@@ -1,0 +1,64 @@
+#!/usr/bin/perl
+
+use strict;
+
+my $html_header = <<END;
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <META HTTP-EQUIV="Refresh" CONTENT="300" >
+<style type="text/css">
+  body {
+    padding: 0em;
+    margin: 0em;
+  }
+  span.item-block {
+    float: left;
+    padding: 1em;
+  }
+</style>
+</head>
+<body>
+<p>
+END
+
+my $html_footer = <<END;
+</p>
+<table cellspacing="0" cellpadding="0">
+  <tbody><tr>
+    <td width="63"><a href="http://oss.oetiker.ch/mrtg/"><img border="0" src="mrtg-l.png" width="63" height="25" alt="MRTG" /></a></td>
+    <td width="25"><a href="http://oss.oetiker.ch/mrtg/"><img border="0" src="mrtg-m.png" width="25" height="25" alt="" /></a></td>
+    <td width="388"><a href="http://oss.oetiker.ch/mrtg/"><img border="0" src="mrtg-r.png" width="388" height="25" alt="Multi Router Traffic Grapher" /></a></td>
+  </tr>
+</tbody></table>
+<table border="0" cellspacing="0" cellpadding="0">
+  <tbody><tr valign="top">
+  <td width="88" align="RIGHT">
+  version 2.16.3</td>
+  <td width='100'/>
+  <td width="288" rowspan='2' align="RIGHT">
+  <a href="http://tobi.oetiker.ch/">Tobias Oetiker</a>
+  <a href="mailto:tobi+mrtglink\@oetiker.ch">&lt;tobi\@oetiker.ch&gt;</a>
+  and&nbsp;<a href="http://www.bungi.com/">Dave&nbsp;Rand</a>&nbsp;<a href="mailto:dlr\@bungi.com">&lt;dlr\@bungi.com&gt;</a>
+  </td>
+</tr>
+<tr><td colspan='2'>indexer by Billy Hamlin</td></tr>
+</tbody></table>
+</body>
+</html>
+END
+
+my $lnk = '.html';
+my $img = '-day.png';
+
+print $html_header;
+
+for my $item (glob('*.html')) {
+  next if( $item =~ m/^index\..*/ );
+  $item =~ m/(.*)\.html/;
+
+  print "<span class='item-block'><a id='$1' href='$1.html'><span class='item-name'>$1</span><br/><img src='$1$img'/></a></span>\n";
+}
+
+print $html_footer;
+

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+HOST=$1
+USER=$2
+PASS=$3
+
+DIALOG="/usr/bin/dialog"
+LSFTP="/usr/bin/ncftpls"
+
+NC_OPTS="-u $2 -p $3"
+
+FTP_PATH="PDF_Out"
+
+FILES=`$LSFTP $NC_OPTS "ftp://$HOST/$FTP_PATH/*"`
+
+echo $FILES

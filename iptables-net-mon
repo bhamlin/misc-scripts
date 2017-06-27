@@ -1,0 +1,42 @@
+#!/usr/bin/perl
+
+use strict;
+
+die "Must be run as root\n" unless( $< == 0 );
+
+my $iptables = '/sbin/iptables';
+my $table = 'FORWARD';
+my $opts = sprintf( '-L %s -nvx', $table );
+
+#open( IPF, "$iptables $opts |" );
+open( IPF, "cat file |" );
+
+my ($interface_packets, $interface_bytes) = (0, 0);
+my (%items, @data) = ((), ());
+
+my @date = localtime(time);
+
+for my $line (<IPF>) {
+  if( $line =~ m/^Chain $table/ ) {
+    @data = split( /\s+/, $line );
+    $interface_packets = $data[4];
+    $interface_bytes = $data[6];
+  } elsif( $line =~ m/ACCEPT/ ) {
+    @data = split( /\s+/, $line );
+    $items{$data[8] . "," . $data[9]} = [$data[1], $data[2]];
+  }
+}
+
+close(IPF);
+
+printf( "%02d/%02d/%02d %d:%d,", $date[5] + 1900, $date[4] + 1, $date[3], $date[2], $date[1] );
+
+printf( "%d,%d", $interface_packets, $interface_bytes );
+
+my $item;
+for my $host (sort(keys %items)) {
+  $item = $items{$host};
+  printf( ',%s,%d,%d', $host, $item->[0], $item->[1] );
+}
+
+print "\n";
